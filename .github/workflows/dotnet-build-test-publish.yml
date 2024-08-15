@@ -1,0 +1,23 @@
+name: .NET Restore, Build, Test & Publish
+on:
+  push:
+    branches: [ "master" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+    - name: dotnet restore
+      run: dotnet restore
+    - name: dotnet build
+      run: dotnet build --no-restore --configuration Release
+    - name: dotnet test
+      run: dotnet test --no-build --configuration Release --verbosity normal --list-tests --blame
+    - name: dotnet nuget push to NuGet
+      run: dotnet nuget push **.nupkg --api-key ${{secrets.RETRY_NUGET}} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+    - name: dotnet nuget push to GitHub
+      run: dotnet nuget push **.nupkg --api-key ${{secrets.RETRY_GITHUB}} --source "https://nuget.pkg.github.com/lyndychivs/index.json" --skip-duplicate
