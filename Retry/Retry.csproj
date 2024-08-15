@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <SignAssembly>False</SignAssembly>
+    <ErrorReport>prompt</ErrorReport>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>Retry</Title>
+    <Version>1.0.1</Version>
+    <Authors>lyndychivs</Authors>
+    <Description>A simple library for retrying and waiting for a condition to be True.</Description>
+    <PackageProjectUrl>https://github.com/lyndychivs/Retry</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/lyndychivs/Retry</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>try;wait;for;retry;attempt;until;engine;cycle</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <PackageId>lyndychivs.Retry</PackageId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <WarningLevel>9999</WarningLevel>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>$(AssemblyName).Tests</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+</Project>
