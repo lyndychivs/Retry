@@ -1,7 +1,7 @@
 # Retry
 A simple library for retrying and waiting for a condition to be True.
 
-## Examples
+## Usage Example
 ```csharp
 var maxWaitTime = TimeSpan.FromSeconds(10);
 var pollingInterval = TimeSpan.FromSeconds(1);
@@ -19,3 +19,6 @@ bool DoSomething()
     return true;
 }
 ```
+
+## Tests
+All Unit Tests can be found under the [Retry.Tests](https://github.com/lyndychivs/Retry/tree/master/Retry.Tests) namesapce.
