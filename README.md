@@ -22,3 +22,8 @@ bool DoSomething()
 
 ## Tests
 All Unit Tests can be found under the [Retry.Tests](https://github.com/lyndychivs/Retry/tree/master/Retry.Tests) namesapce.
+
+## Package
+Available on:
+- [GitHub Packages - lyndychivs.Retry](https://github.com/lyndychivs/Retry/pkgs/nuget/lyndychivs.Retry)
+- [Nuget Packages - lyndychivs.Retry](https://www.nuget.org/packages/lyndychivs.Retry/)
