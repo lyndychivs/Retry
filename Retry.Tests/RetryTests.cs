@@ -6,6 +6,7 @@
 
     using NUnit.Framework;
 
+    [TestFixture]
     public class RetryTests
     {
         private readonly TimeSpan _validMaxWait = TimeSpan.FromSeconds(1);

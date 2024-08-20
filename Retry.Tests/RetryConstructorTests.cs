@@ -14,7 +14,7 @@
         [Test]
         public void Constructor_ValidParameters_ReturnsRetry()
         {
-            var retry = new Retry(_validMaxWait, _validPollingInterval);
+            var retry = new Retry(_validMaxWait);
 
             Assert.That(retry, Is.Not.Null);
         }
@@ -22,7 +22,7 @@
         [Test]
         public void Constructor_ZeroMaxWait_ThrowsArgumentException()
         {
-            var ex = Assert.Throws<ArgumentException>(() => new Retry(TimeSpan.Zero, _validPollingInterval));
+            var ex = Assert.Throws<ArgumentException>(() => new Retry(TimeSpan.Zero));
 
             Assert.Multiple(() =>
             {
