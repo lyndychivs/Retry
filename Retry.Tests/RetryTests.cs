@@ -1,6 +1,7 @@
 ﻿namespace Retry.Tests
 {
     using System;
+    using System.Diagnostics;
 
     using NSubstitute;
 
@@ -47,6 +48,34 @@
             });
 
             Assert.That(counter, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Until_WithPollingInterval_CorrectlyAwaitsPollingIntervalBeforeSecondCycle()
+        {
+            var retry = new Retry(TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1), CreateDateTimeProviderWithNoTicks());
+            int counter = 0;
+            var stopwatch = new Stopwatch();
+
+            retry.Until(() =>
+            {
+                counter++;
+                stopwatch.Start();
+
+                if (counter <= 1)
+                {
+                    return false;
+                }
+
+                stopwatch.Stop();
+                return true;
+            });
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(counter, Is.EqualTo(2));
+                Assert.That(stopwatch.Elapsed, Is.GreaterThanOrEqualTo(TimeSpan.FromSeconds(1)));
+            });
         }
 
         [Test]
