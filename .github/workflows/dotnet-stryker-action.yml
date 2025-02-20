@@ -2,7 +2,10 @@ name: dotnet-stryker-action
 run-name: Mutation Testing with Stryker.NET
 permissions:
   contents: read
-on: push
+on:
+    push:
+    schedule:
+      - cron: '0 8 * * *'
 jobs:
   dotnet-stryker-action:
     runs-on: ubuntu-latest

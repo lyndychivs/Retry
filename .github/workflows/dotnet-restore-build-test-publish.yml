@@ -2,7 +2,10 @@ name: dotnet-restore-build-test-publish
 run-name: .NET Restore, Build, Test & Publish
 permissions:
   contents: read
-on: push
+on:
+  push:
+  schedule:
+    - cron: '0 8 * * *'
 jobs:
   dotnet-restore-build-test-publish:
     runs-on: ubuntu-latest
