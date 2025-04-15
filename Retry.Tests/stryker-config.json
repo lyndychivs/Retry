@@ -15,7 +15,7 @@
     "solution": "Retry.sln",
     "configuration": "Debug",
     "target-framework": null,
-    "project": "/Retry/Retry.csproj",
+    "project": "../Retry/Retry.csproj",
     "coverage-analysis": "perTest",
     "disable-bail": false,
     "disable-mix-mutants": false,
@@ -42,7 +42,7 @@
       "fallback-version": "master"
     },
     "dashboard-url": "https://dashboard.stryker-mutator.io",
-    "test-projects": ["/Retry.Tests/Retry.Tests.csproj"],
+    "test-projects": ["Retry.Tests.csproj"],
     "test-case-filter": "",
     "ignore-mutations": [],
     "ignore-methods": [],

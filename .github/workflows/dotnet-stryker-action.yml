@@ -16,7 +16,7 @@ jobs:
       - name: Run Stryker.NET
         uses: lyndychivs/dotnet-stryker-action@v1
         with:
-          configurationFile: "stryker-config.json"
+          configurationFile: "/Retry.Tests/stryker-config.json"
           dashboardApiKey: ${{ secrets.STRYKER_DASHBOARD }}
           version: ${{ github.ref_name }}
 
