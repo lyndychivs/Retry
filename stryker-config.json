@@ -27,8 +27,7 @@
     "verbosity": "info",
     "reporters": [
       "Progress",
-      "Html",
-      "dashboard"
+      "Html"
     ],
     "since": {
       "enabled": false,
