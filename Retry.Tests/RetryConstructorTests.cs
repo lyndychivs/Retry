@@ -1,4 +1,4 @@
-﻿namespace Retry.Tests
+namespace Retry.Tests
 {
     using System;
 
@@ -24,11 +24,11 @@
         {
             var ex = Assert.Throws<ArgumentException>(() => new Retry(TimeSpan.Zero));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ex.ParamName, Is.EqualTo("maxWait"));
                 Assert.That(ex.Message, Is.EqualTo("maxWait TimeSpan must be greater than 00:00:00 (Parameter 'maxWait')"));
-            });
+            }
         }
 
         [Test]
@@ -36,11 +36,11 @@
         {
             var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, TimeSpan.Zero));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
                 Assert.That(ex.Message, Is.EqualTo("pollingInterval TimeSpan must be greater than 00:00:00 (Parameter 'pollingInterval')"));
-            });
+            }
         }
 
         [Test]
@@ -50,11 +50,11 @@
 
             var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, pollingInterval));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
                 Assert.That(ex.Message, Is.EqualTo("pollingInterval (00:00:10) must be less than maxWait (00:00:10) (Parameter 'pollingInterval')"));
-            });
+            }
         }
 
         [Test]
@@ -64,11 +64,11 @@
 
             var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, pollingInterval));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
                 Assert.That(ex.Message, Is.EqualTo("pollingInterval (00:00:10.0010000) must be less than maxWait (00:00:10) (Parameter 'pollingInterval')"));
-            });
+            }
         }
 
         [Test]
@@ -76,11 +76,11 @@
         {
             var ex = Assert.Throws<ArgumentNullException>(() => new Retry(_validMaxWait, _validPollingInterval, null));
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(ex.ParamName, Is.EqualTo("dateTimeProvider"));
                 Assert.That(ex.Message, Is.EqualTo("Value cannot be null. (Parameter 'dateTimeProvider')"));
-            });
+            }
         }
     }
 }

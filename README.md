@@ -1,4 +1,4 @@
-[![Mutation testing badge](https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Flyndychivs%2FRetry%2Fmaster)](https://dashboard.stryker-mutator.io/reports/github.com/lyndychivs/Retry/master)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Flyndychivs%2FRetry%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/lyndychivs/Retry/main)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/lyndychivs.Retry?style=for-the-badge&logo=nuget)](https://www.nuget.org/packages/lyndychivs.Retry/)
 
 # lyndychivs.Retry
@@ -23,8 +23,10 @@ bool DoSomething()
 }
 ```
 
+> Also supports Async context.
+
 ## Tests
-All Unit Tests can be found under the [Retry.Tests](https://github.com/lyndychivs/Retry/tree/master/Retry.Tests) namesapce.
+All Unit Tests can be found under the [Retry.Tests](https://github.com/lyndychivs/Retry/tree/main/Retry.Tests) namesapce.
 
 ## Package
 Available on:

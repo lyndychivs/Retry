@@ -1,0 +1,45 @@
+name: Build, Test & Publish
+run-name: Build, Test & Publish
+permissions:
+  contents: read
+on:
+  push:
+  schedule:
+    - cron: '0 4 * * SUN'
+jobs:
+  build-test-publish:
+    runs-on: ubuntu-latest
+    env:
+      CONFIGURATION: Release
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v6
+
+    - name: Install .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: 10.0.x
+
+    - name: Restore
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration ${{ env.CONFIGURATION }}
+
+    - name: Test
+      run: dotnet test --no-build --configuration ${{ env.CONFIGURATION }} --logger "trx;LogFileName=Retry-Test-Results.trx"
+
+    - name: Publish Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      if: (!cancelled())
+      with:
+        files: '**/*.trx'
+        action_fail_on_inconclusive: true
+
+    - name: Push to NuGet
+      if: github.ref == 'refs/heads/main'
+      run: dotnet nuget push **.nupkg --api-key ${{secrets.RETRY_NUGET}} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+
+    - name: Push to GitHub
+      if: github.ref == 'refs/heads/main'
+      run: dotnet nuget push **.nupkg --api-key ${{secrets.RETRY_GITHUB}} --source "https://nuget.pkg.github.com/lyndychivs/index.json" --skip-duplicate

@@ -1,114 +1,115 @@
-﻿namespace Retry.Tests
+namespace Retry.Tests
 {
     using System;
     using System.Diagnostics;
+    using System.Threading.Tasks;
 
     using NSubstitute;
 
     using NUnit.Framework;
 
     [TestFixture]
-    public class RetryTests
+    public class RetryUntilAsyncTests
     {
         private readonly TimeSpan _validMaxWait = TimeSpan.FromSeconds(1);
 
         private readonly TimeSpan _validPollingInterval = TimeSpan.FromMilliseconds(2);
 
         [Test]
-        public void Until_FunctionReturnsTrue_ExecutesOnce()
+        public async Task UntilAsync_FunctionReturnsTrue_ExecutesOnce()
         {
             var retry = new Retry(_validMaxWait, _validPollingInterval, CreateDateTimeProviderWithNoTicks());
             int counter = 0;
 
-            retry.Until(() =>
+            await retry.UntilAsync(async () =>
             {
                 counter++;
-                return true;
+                return await Task.FromResult(true);
             });
 
             Assert.That(counter, Is.EqualTo(1));
         }
 
         [Test]
-        public void Until_FunctionReturnsTrueOnSecondCycle_ExecutesTwice()
+        public async Task UntilAsync_FunctionReturnsTrueOnSecondCycle_ExecutesTwice()
         {
             var retry = new Retry(_validMaxWait, _validPollingInterval, CreateDateTimeProviderWithNoTicks());
             int counter = 0;
 
-            retry.Until(() =>
+            await retry.UntilAsync(async () =>
             {
                 counter++;
 
                 if (counter <= 1)
                 {
-                    return false;
+                    return await Task.FromResult(false);
                 }
 
-                return true;
+                return await Task.FromResult(true);
             });
 
             Assert.That(counter, Is.EqualTo(2));
         }
 
         [Test]
-        public void Until_WithPollingInterval_CorrectlyAwaitsPollingIntervalBeforeSecondCycle()
+        public async Task UntilAsync_WithPollingInterval_CorrectlyAwaitsPollingIntervalBeforeSecondCycle()
         {
             var retry = new Retry(TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(1), CreateDateTimeProviderWithNoTicks());
             int counter = 0;
             var stopwatch = new Stopwatch();
 
-            retry.Until(() =>
+            await retry.UntilAsync(async () =>
             {
                 counter++;
                 stopwatch.Start();
 
                 if (counter <= 1)
                 {
-                    return false;
+                    return await Task.FromResult(false);
                 }
 
                 stopwatch.Stop();
-                return true;
+                return await Task.FromResult(true);
             });
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(counter, Is.EqualTo(2));
                 Assert.That(stopwatch.Elapsed, Is.GreaterThanOrEqualTo(TimeSpan.FromSeconds(1)));
-            });
+            }
         }
 
         [Test]
-        public void Until_FunctionReturnsFalse_ThrowsTimeoutException()
+        public async Task UntilAsync_FunctionReturnsFalse_ThrowsTimeoutException()
         {
             var retry = new Retry(_validMaxWait, _validPollingInterval, CreateDateTimeProviderThatTicksForOneCycle());
             int counter = 0;
 
-            var ex = Assert.Throws<TimeoutException>(() =>
+            var ex = Assert.ThrowsAsync<TimeoutException>(async () =>
             {
-                retry.Until(() =>
+                await retry.UntilAsync(async () =>
                 {
                     counter++;
-                    return false;
+                    return await Task.FromResult(false);
                 });
             });
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(counter, Is.EqualTo(1));
                 Assert.That(ex.Message, Is.EqualTo("Timed out after 00:00:01 polling every 00:00:00.0020000"));
                 Assert.That(ex.InnerException, Is.TypeOf<AggregateException>());
                 Assert.That(ex.InnerException?.Message, Is.EqualTo("One or more errors occurred."));
-            });
+            }
         }
 
         [Test]
-        public void Until_FunctionThrowsExceptionOnlyOnFirstCycle_DoesNotThrow()
+        public async Task UntilAsync_FunctionThrowsExceptionOnlyOnFirstCycle_DoesNotThrow()
         {
             var retry = new Retry(_validMaxWait, _validPollingInterval, CreateDateTimeProviderWithNoTicks());
             int counter = 0;
 
-            retry.Until(() =>
+            await retry.UntilAsync(async () =>
             {
                 counter++;
 
@@ -117,35 +118,35 @@
                     throw new Exception("test exception");
                 }
 
-                return true;
+                return await Task.FromResult(true);
             });
 
             Assert.That(counter, Is.EqualTo(2));
         }
 
         [Test]
-        public void Until_FunctionThrowsException_ThrowsTimeoutException()
+        public async Task UntilAsync_FunctionThrowsException_ThrowsTimeoutException()
         {
             var retry = new Retry(_validMaxWait, _validPollingInterval, CreateDateTimeProviderThatTicksForOneCycle());
             int counter = 0;
 
-            var ex = Assert.Throws<TimeoutException>(() =>
+            var ex = Assert.ThrowsAsync<TimeoutException>(async () =>
             {
-                retry.Until(() =>
+                await retry.UntilAsync(async () =>
                 {
                     counter++;
                     throw new Exception("test exception");
                 });
             });
 
-            Assert.Multiple(() =>
+            using (Assert.EnterMultipleScope())
             {
                 Assert.That(counter, Is.EqualTo(1));
                 Assert.That(ex.Message, Is.EqualTo("Timed out after 00:00:01 polling every 00:00:00.0020000"));
                 Assert.That(ex.InnerException, Is.TypeOf<AggregateException>());
                 Assert.That(ex.InnerException?.Message, Is.EqualTo("One or more errors occurred. (test exception)"));
                 Assert.That((ex.InnerException as AggregateException)?.InnerExceptions, Has.Count.EqualTo(1));
-            });
+            }
         }
 
         private static IDateTimeProvider CreateDateTimeProviderWithNoTicks()

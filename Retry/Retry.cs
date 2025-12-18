@@ -1,8 +1,9 @@
-﻿namespace Retry
+namespace Retry
 {
     using System;
     using System.Collections.Generic;
     using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Retry execute logic until a condition to be True
@@ -80,6 +81,41 @@
                 try
                 {
                     result = function();
+                }
+                catch (Exception ex)
+                {
+                    exceptions.Add(ex);
+                }
+
+                if (result)
+                {
+                    return;
+                }
+
+                Thread.Sleep(_pollingInterval);
+            }
+
+            throw new TimeoutException($"Timed out after {_maxWait} polling every {_pollingInterval}", new AggregateException(exceptions));
+        }
+
+        /// <summary>
+        /// Repeatedly executes the Function until a True condition is achieved or the Timeout is reached.
+        /// </summary>
+        /// <param name="function">The Function to execute until a True condition is achieved.</param>
+        /// <exception cref="TimeoutException"></exception>
+        public async Task UntilAsync(Func<Task<bool>> function)
+        {
+            bool result = false;
+
+            DateTime endTime = _dateTimeProvider.UtcNow + _maxWait;
+
+            var exceptions = new List<Exception>();
+
+            while (_dateTimeProvider.UtcNow < endTime && !result)
+            {
+                try
+                {
+                    result = await function();
                 }
                 catch (Exception ex)
                 {
