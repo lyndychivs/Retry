@@ -14,7 +14,7 @@
     ],
     "solution": "Retry.sln",
     "configuration": "Debug",
-    "target-framework": null,
+    "target-framework": "net10.0",
     "project": "/Retry/Retry.csproj",
     "coverage-analysis": "perTest",
     "disable-bail": false,
