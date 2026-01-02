@@ -1,9 +1,8 @@
-﻿namespace Retry
-{
-    using System;
+namespace Retry;
 
-    internal class DateTimeProvider : IDateTimeProvider
-    {
-        public DateTime UtcNow => DateTime.UtcNow;
-    }
+using System;
+
+internal class DateTimeProvider : IDateTimeProvider
+{
+    public DateTime UtcNow => DateTime.UtcNow;
 }

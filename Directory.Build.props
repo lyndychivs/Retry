@@ -1,0 +1,63 @@
+<Project>
+    <PropertyGroup>
+        <ImportDirectoryBuildProps>true</ImportDirectoryBuildProps>
+    </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+
+        <OutputType>Library</OutputType>
+        <Configurations>Debug;Release</Configurations>
+
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <EnableNETAnalyzers>True</EnableNETAnalyzers>
+        <AnalysisLevel>latest-recommended</AnalysisLevel>
+        <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+
+        <Version>1.0.4</Version>
+        <AssemblyVersion>1.0.4</AssemblyVersion>
+        <FileVersion>1.0.4</FileVersion>
+
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+        <Authors>lyndychivs</Authors>
+        <Company>lyndychivs</Company>
+
+        <Title>Retry</Title>
+        <Product>Retry</Product>
+
+        <PackageIcon>Retry.png</PackageIcon>
+        <Copyright>lyndychivs Retry © 2026</Copyright>
+
+        <Description>A simple library for retrying and waiting for a condition to be True.</Description>
+        <PackageTags>try;wait;for;retry;attempt;until;engine;cycle</PackageTags>
+
+        <SignAssembly>False</SignAssembly>
+        <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+
+        <PackageProjectUrl>https://github.com/lyndychivs/Retry</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/lyndychivs/Retry</RepositoryUrl>
+
+        <RepositoryType>git</RepositoryType>
+        <NeutralLanguage>en</NeutralLanguage>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+        <Optimize>true</Optimize>
+        <DebugType>full</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <WarningLevel>9999</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+        <Optimize>false</Optimize>
+        <DebugType>full</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <WarningLevel>9999</WarningLevel>
+    </PropertyGroup>
+</Project>

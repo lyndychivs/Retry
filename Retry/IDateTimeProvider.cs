@@ -1,9 +1,8 @@
-﻿namespace Retry
-{
-    using System;
+namespace Retry;
 
-    internal interface IDateTimeProvider
-    {
-        DateTime UtcNow { get; }
-    }
+using System;
+
+internal interface IDateTimeProvider
+{
+    DateTime UtcNow { get; }
 }

@@ -1,5 +1,6 @@
-[![Mutation testing badge](https://img.shields.io/endpoint?style=for-the-badge&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Flyndychivs%2FRetry%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/lyndychivs/Retry/main)
-[![NuGet Downloads](https://img.shields.io/nuget/dt/lyndychivs.Retry?style=for-the-badge&logo=nuget)](https://www.nuget.org/packages/lyndychivs.Retry/)
+[![Build, Test & Publish](https://github.com/lyndychivs/Retry/actions/workflows/build-test-publish.yml/badge.svg?branch=main)](https://github.com/lyndychivs/Retry/actions/workflows/build-test-publish.yml)
+[![Mutation testing badge](https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Flyndychivs%2FRetry%2Fmain)](https://dashboard.stryker-mutator.io/reports/github.com/lyndychivs/Retry/main)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/lyndychivs.Retry?style=flat&logo=nuget)](https://www.nuget.org/packages/lyndychivs.Retry/)
 
 # lyndychivs.Retry
 A simple library for retrying and waiting for a condition to be True.

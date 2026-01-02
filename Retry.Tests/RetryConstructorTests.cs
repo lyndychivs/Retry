@@ -1,86 +1,85 @@
-namespace Retry.Tests
+namespace Retry.Tests;
+
+using System;
+
+using NUnit.Framework;
+
+[TestFixture]
+internal sealed class RetryConstructorTests
 {
-    using System;
+    private readonly TimeSpan _validMaxWait = TimeSpan.FromSeconds(10);
 
-    using NUnit.Framework;
+    private readonly TimeSpan _validPollingInterval = TimeSpan.FromMilliseconds(500);
 
-    [TestFixture]
-    public class RetryConstructorTests
+    [Test]
+    public void Constructor_ValidParameters_ReturnsRetry()
     {
-        private readonly TimeSpan _validMaxWait = TimeSpan.FromSeconds(10);
+        var retry = new Retry(_validMaxWait);
 
-        private readonly TimeSpan _validPollingInterval = TimeSpan.FromMilliseconds(500);
+        Assert.That(retry, Is.Not.Null);
+    }
 
-        [Test]
-        public void Constructor_ValidParameters_ReturnsRetry()
+    [Test]
+    public void Constructor_ZeroMaxWait_ThrowsArgumentException()
+    {
+        var ex = Assert.Throws<ArgumentException>(() => new Retry(TimeSpan.Zero));
+
+        using (Assert.EnterMultipleScope())
         {
-            var retry = new Retry(_validMaxWait);
-
-            Assert.That(retry, Is.Not.Null);
+            Assert.That(ex.ParamName, Is.EqualTo("maxWait"));
+            Assert.That(ex.Message, Is.EqualTo("maxWait TimeSpan must be greater than 00:00:00 (Parameter 'maxWait')"));
         }
+    }
 
-        [Test]
-        public void Constructor_ZeroMaxWait_ThrowsArgumentException()
+    [Test]
+    public void Constructor_ZeroPollingInterval_ThrowsArgumentException()
+    {
+        var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, TimeSpan.Zero));
+
+        using (Assert.EnterMultipleScope())
         {
-            var ex = Assert.Throws<ArgumentException>(() => new Retry(TimeSpan.Zero));
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(ex.ParamName, Is.EqualTo("maxWait"));
-                Assert.That(ex.Message, Is.EqualTo("maxWait TimeSpan must be greater than 00:00:00 (Parameter 'maxWait')"));
-            }
+            Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
+            Assert.That(ex.Message, Is.EqualTo("pollingInterval TimeSpan must be greater than 00:00:00 (Parameter 'pollingInterval')"));
         }
+    }
 
-        [Test]
-        public void Constructor_ZeroPollingInterval_ThrowsArgumentException()
+    [Test]
+    public void Constructor_PollingIntervalEqualToMaxWait_ThrowsArgumentException()
+    {
+        var pollingInterval = _validMaxWait;
+
+        var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, pollingInterval));
+
+        using (Assert.EnterMultipleScope())
         {
-            var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, TimeSpan.Zero));
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
-                Assert.That(ex.Message, Is.EqualTo("pollingInterval TimeSpan must be greater than 00:00:00 (Parameter 'pollingInterval')"));
-            }
+            Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
+            Assert.That(ex.Message, Is.EqualTo("pollingInterval (00:00:10) must be less than maxWait (00:00:10) (Parameter 'pollingInterval')"));
         }
+    }
 
-        [Test]
-        public void Constructor_PollingIntervalEqualToMaxWait_ThrowsArgumentException()
+    [Test]
+    public void Constructor_PollingIntervalGreaterThanMaxWait_ThrowsArgumentException()
+    {
+        var pollingInterval = _validMaxWait + TimeSpan.FromMilliseconds(1);
+
+        var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, pollingInterval));
+
+        using (Assert.EnterMultipleScope())
         {
-            var pollingInterval = _validMaxWait;
-
-            var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, pollingInterval));
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
-                Assert.That(ex.Message, Is.EqualTo("pollingInterval (00:00:10) must be less than maxWait (00:00:10) (Parameter 'pollingInterval')"));
-            }
+            Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
+            Assert.That(ex.Message, Is.EqualTo("pollingInterval (00:00:10.0010000) must be less than maxWait (00:00:10) (Parameter 'pollingInterval')"));
         }
+    }
 
-        [Test]
-        public void Constructor_PollingIntervalGreaterThanMaxWait_ThrowsArgumentException()
+    [Test]
+    public void Constructor_NullDateTimeProvider_ThrowsArgumentNullException()
+    {
+        var ex = Assert.Throws<ArgumentNullException>(() => new Retry(_validMaxWait, _validPollingInterval, null!));
+
+        using (Assert.EnterMultipleScope())
         {
-            var pollingInterval = _validMaxWait + TimeSpan.FromMilliseconds(1);
-
-            var ex = Assert.Throws<ArgumentException>(() => new Retry(_validMaxWait, pollingInterval));
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(ex.ParamName, Is.EqualTo("pollingInterval"));
-                Assert.That(ex.Message, Is.EqualTo("pollingInterval (00:00:10.0010000) must be less than maxWait (00:00:10) (Parameter 'pollingInterval')"));
-            }
-        }
-
-        [Test]
-        public void Constructor_NullDateTimeProvider_ThrowsArgumentNullException()
-        {
-            var ex = Assert.Throws<ArgumentNullException>(() => new Retry(_validMaxWait, _validPollingInterval, null));
-
-            using (Assert.EnterMultipleScope())
-            {
-                Assert.That(ex.ParamName, Is.EqualTo("dateTimeProvider"));
-                Assert.That(ex.Message, Is.EqualTo("Value cannot be null. (Parameter 'dateTimeProvider')"));
-            }
+            Assert.That(ex.ParamName, Is.EqualTo("dateTimeProvider"));
+            Assert.That(ex.Message, Is.EqualTo("Value cannot be null. (Parameter 'dateTimeProvider')"));
         }
     }
 }
