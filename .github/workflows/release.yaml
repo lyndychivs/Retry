@@ -1,0 +1,62 @@
+name: Release
+run-name: Release ${{ github.ref_name }}
+permissions:
+    contents: write
+    checks: write
+on:
+    release:
+        types: [published]
+jobs:
+    build-test-publish:
+        runs-on: ubuntu-latest
+        env:
+            CONFIGURATION: Release
+            TARGET_FRAMEWORK: net10.0
+        steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v6
+
+            - name: Get Version from Release Tag
+              id: get_version
+              run: |
+                  VERSION=${GITHUB_REF_NAME#v}
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+                  echo "Building release version: $VERSION"
+
+            - name: Install .NET
+              uses: actions/setup-dotnet@v5
+              with:
+                  dotnet-version: 10.0.x
+
+            - name: Restore
+              run: dotnet restore
+
+            - name: Build
+              id: build
+              run: dotnet build --no-restore --configuration ${{ env.CONFIGURATION }} /p:Version=${{ steps.get_version.outputs.version }}
+
+            - name: Test
+              run: dotnet test --no-build --configuration ${{ env.CONFIGURATION }} --logger "trx;LogFileName=Retry-Test-Results.trx"
+
+            - name: Publish Test Results
+              uses: EnricoMi/publish-unit-test-result-action@v2
+              if: (!cancelled())
+              with:
+                  files: '**/*.trx'
+                  action_fail_on_inconclusive: true
+
+            - name: NuGet Push to NuGet.org
+              if: success()
+              run: dotnet nuget push **.nupkg --api-key ${{secrets.RETRY_NUGET}} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+
+            - name: NuGet Push to GitHub Packages
+              if: success()
+              run: dotnet nuget push **.nupkg --api-key ${{secrets.RETRY_GITHUB}} --source "https://nuget.pkg.github.com/lyndychivs/index.json" --skip-duplicate
+
+            - name: Upload NuGet Package to Release
+              if: success()
+              uses: softprops/action-gh-release@v2
+              with:
+                  files: |
+                      **/*.nupkg
+                      **/*.snupkg

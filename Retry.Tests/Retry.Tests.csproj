@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <IsTestProject>true</IsTestProject>
         <IsPublishable>False</IsPublishable>
     </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" />
         <PackageReference Include="NSubstitute" />
@@ -16,6 +18,7 @@
         </PackageReference>
         <PackageReference Include="NUnit3TestAdapter" />
     </ItemGroup>
+
     <ItemGroup>
         <ProjectReference Include="..\Retry\Retry.csproj" />
     </ItemGroup>

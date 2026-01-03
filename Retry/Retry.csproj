@@ -3,7 +3,9 @@
         <TargetFramework>netstandard2.0</TargetFramework>
         <PackageId>lyndychivs.Retry</PackageId>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
     </PropertyGroup>
+
     <ItemGroup>
         <None Include="..\README.md">
             <Pack>True</Pack>
@@ -14,6 +16,7 @@
             <PackagePath>\</PackagePath>
         </EmbeddedResource>
     </ItemGroup>
+
     <ItemGroup>
         <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
             <_Parameter1>$(AssemblyName).Tests</_Parameter1>

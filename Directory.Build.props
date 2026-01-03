@@ -16,9 +16,14 @@
         <AnalysisLevel>latest-recommended</AnalysisLevel>
         <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 
-        <Version>1.0.4</Version>
-        <AssemblyVersion>1.0.4</AssemblyVersion>
-        <FileVersion>1.0.4</FileVersion>
+        <!-- Version can be overridden by CI/CD via environment variable -->
+        <Version Condition="'$(Version)' == ''">1.0.0</Version>
+        <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(Version)</AssemblyVersion>
+        <FileVersion Condition="'$(FileVersion)' == ''">$(Version)</FileVersion>
+
+        <IncludeSymbols>True</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
 
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
 
@@ -33,10 +38,6 @@
 
         <Description>A simple library for retrying and waiting for a condition to be True.</Description>
         <PackageTags>try;wait;for;retry;attempt;until;engine;cycle</PackageTags>
-
-        <SignAssembly>False</SignAssembly>
-        <ProduceReferenceAssembly>True</ProduceReferenceAssembly>
-        <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
         <PackageReadmeFile>README.md</PackageReadmeFile>
 
