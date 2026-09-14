@@ -3,6 +3,7 @@ run-name: Release ${{ github.ref_name }}
 permissions:
     contents: write
     checks: write
+    id-token: write
 on:
     release:
         types: [published]
@@ -12,6 +13,7 @@ jobs:
         env:
             CONFIGURATION: Release
             TARGET_FRAMEWORK: net10.0
+            NUGET_USER: ${{ vars.NUGET_USER }}
         steps:
             - name: Checkout Repository
               uses: actions/checkout@v7
@@ -45,9 +47,16 @@ jobs:
                   files: '**/*.trx'
                   action_fail_on_inconclusive: true
 
+            - name: NuGet Login
+              if: success()
+              uses: NuGet/login@v1
+              id: nuget_login
+              with:
+                  user: ${{ env.NUGET_USER }}
+
             - name: NuGet Push to NuGet.org
               if: success()
-              run: dotnet nuget push **.nupkg --api-key ${{secrets.RETRY_NUGET}} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+              run: dotnet nuget push **.nupkg --api-key ${{ steps.nuget_login.outputs.NUGET_API_KEY }} --source "https://api.nuget.org/v3/index.json" --skip-duplicate
 
             - name: NuGet Push to GitHub Packages
               if: success()
