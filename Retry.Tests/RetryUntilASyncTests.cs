@@ -85,7 +85,7 @@ internal sealed class RetryUntilAsyncTests
         var retry = new Retry(_validMaxWait, _validPollingInterval, CreateDateTimeProviderThatTicksForOneCycle());
         int counter = 0;
 
-        var ex = Assert.ThrowsAsync<TimeoutException>(async () =>
+        var ex = await Assert.ThrowsAsync<TimeoutException>(async () =>
         {
             await retry.UntilAsync(async () =>
             {
@@ -130,7 +130,7 @@ internal sealed class RetryUntilAsyncTests
         var retry = new Retry(_validMaxWait, _validPollingInterval, CreateDateTimeProviderThatTicksForOneCycle());
         int counter = 0;
 
-        var ex = Assert.ThrowsAsync<TimeoutException>(async () =>
+        var ex = await Assert.ThrowsAsync<TimeoutException>(async () =>
         {
             await retry.UntilAsync(async () =>
             {
